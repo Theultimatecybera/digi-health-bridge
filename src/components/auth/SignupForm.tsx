@@ -9,6 +9,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Stethoscope, User, Shield } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
+const logoUrl = '/lovable-uploads/66a1a78a-f368-4624-b170-87a848656703.png';
+
 interface SignupFormProps {
   onSwitchToLogin: () => void;
 }
@@ -68,8 +70,8 @@ export function SignupForm({ onSwitchToLogin }: SignupFormProps) {
       <div className="w-full max-w-md space-y-6">
         {/* Header */}
         <div className="text-center space-y-2">
-          <div className="flex items-center justify-center w-16 h-16 mx-auto rounded-2xl bg-primary text-primary-foreground shadow-medical">
-            <Shield className="w-8 h-8" />
+          <div className="flex items-center justify-center w-16 h-16 mx-auto rounded-2xl bg-card border-2 border-primary/20 shadow-medical overflow-hidden">
+            <img src={logoUrl} alt="Digital Health Records Logo" className="w-12 h-12 object-contain" />
           </div>
           <h1 className="text-2xl font-bold">Create Account</h1>
           <p className="text-muted-foreground">Join the digital health revolution</p>

@@ -11,7 +11,7 @@ import {
   LogOut,
   Globe
 } from 'lucide-react';
-import logo from '@/assets/logo.png';
+const logoUrl = '/lovable-uploads/66a1a78a-f368-4624-b170-87a848656703.png';
 import {
   Sidebar,
   SidebarContent,
@@ -78,7 +78,7 @@ export function AppSidebar() {
         <div className="p-4 border-b">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden">
-              <img src={logo} alt="Digital Health Records Logo" className="w-full h-full object-contain" />
+              <img src={logoUrl} alt="Digital Health Records Logo" className="w-full h-full object-contain" />
             </div>
             {!collapsed && (
               <div>
