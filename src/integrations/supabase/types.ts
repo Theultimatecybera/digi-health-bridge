@@ -14,7 +14,130 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      appointments: {
+        Row: {
+          appointment_date: string | null
+          created_at: string | null
+          doctor_name: string | null
+          id: string
+          patient_id: string | null
+          status: string | null
+        }
+        Insert: {
+          appointment_date?: string | null
+          created_at?: string | null
+          doctor_name?: string | null
+          id?: string
+          patient_id?: string | null
+          status?: string | null
+        }
+        Update: {
+          appointment_date?: string | null
+          created_at?: string | null
+          doctor_name?: string | null
+          id?: string
+          patient_id?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      "DATABASE SETUP": {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          Name: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string
+          id?: string
+          Name?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          Name?: string
+        }
+        Relationships: []
+      }
+      medical_records: {
+        Row: {
+          diagnosis: string | null
+          doctor_name: string | null
+          id: string
+          notes: string | null
+          patient_id: string | null
+          record_date: string | null
+          treatment: string | null
+        }
+        Insert: {
+          diagnosis?: string | null
+          doctor_name?: string | null
+          id?: string
+          notes?: string | null
+          patient_id?: string | null
+          record_date?: string | null
+          treatment?: string | null
+        }
+        Update: {
+          diagnosis?: string | null
+          doctor_name?: string | null
+          id?: string
+          notes?: string | null
+          patient_id?: string | null
+          record_date?: string | null
+          treatment?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medical_records_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patients: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          date_of_birth: string | null
+          full_name: string
+          gender: string | null
+          id: string
+          phone_number: string | null
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          full_name: string
+          gender?: string | null
+          id?: string
+          phone_number?: string | null
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          date_of_birth?: string | null
+          full_name?: string
+          gender?: string | null
+          id?: string
+          phone_number?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
