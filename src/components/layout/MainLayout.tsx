@@ -22,7 +22,7 @@ export function MainLayout({ children }: MainLayoutProps) {
                 <Menu className="w-5 h-5" />
               </SidebarTrigger>
               <div>
-                <h1 className="font-semibold text-lg">Digital Health Records</h1>
+                <h1 className="font-semibold text-lg">HealthPass</h1>
                 <p className="text-sm text-muted-foreground">Secure Healthcare Management</p>
               </div>
             </div>

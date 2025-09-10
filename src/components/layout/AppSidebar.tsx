@@ -78,11 +78,11 @@ export function AppSidebar() {
         <div className="p-4 border-b">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden">
-              <img src={logoUrl} alt="Digital Health Records Logo" className="w-full h-full object-contain" />
+              <img src={logoUrl} alt="HealthPass Logo" className="w-full h-full object-contain" />
             </div>
             {!collapsed && (
               <div>
-                <h2 className="font-semibold text-sm">Health Records</h2>
+                <h2 className="font-semibold text-sm">HealthPass</h2>
                 <p className="text-xs text-muted-foreground">Digital System</p>
               </div>
             )}
