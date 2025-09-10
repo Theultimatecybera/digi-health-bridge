@@ -9,9 +9,9 @@ import {
   Stethoscope,
   Search,
   LogOut,
-  Shield,
   Globe
 } from 'lucide-react';
+import logo from '@/assets/logo.png';
 import {
   Sidebar,
   SidebarContent,
@@ -77,8 +77,8 @@ export function AppSidebar() {
         {/* Header */}
         <div className="p-4 border-b">
           <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary text-primary-foreground">
-              <Shield className="w-5 h-5" />
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg overflow-hidden">
+              <img src={logo} alt="Digital Health Records Logo" className="w-full h-full object-contain" />
             </div>
             {!collapsed && (
               <div>
