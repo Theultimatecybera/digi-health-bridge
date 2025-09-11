@@ -254,6 +254,12 @@ function BookAppointmentDialog({ open, onOpenChange }: { open: boolean; onOpenCh
     date: '',
     time: '',
     type: '',
+    urgency: '',
+    reason: '',
+    symptoms: '',
+    insurance: '',
+    emergencyContact: '',
+    location: '',
     notes: ''
   });
 
@@ -267,7 +273,10 @@ function BookAppointmentDialog({ open, onOpenChange }: { open: boolean; onOpenCh
     });
     
     onOpenChange(false);
-    setFormData({ doctorId: '', date: '', time: '', type: '', notes: '' });
+    setFormData({ 
+      doctorId: '', date: '', time: '', type: '', urgency: '', reason: '', 
+      symptoms: '', insurance: '', emergencyContact: '', location: '', notes: '' 
+    });
   };
 
   const timeSlots = [
@@ -283,7 +292,7 @@ function BookAppointmentDialog({ open, onOpenChange }: { open: boolean; onOpenCh
           {t('appointments.book')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('appointments.book')}</DialogTitle>
           <DialogDescription>
@@ -291,78 +300,159 @@ function BookAppointmentDialog({ open, onOpenChange }: { open: boolean; onOpenCh
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="doctor">Select Doctor</Label>
-            <Select value={formData.doctorId} onValueChange={(value) => setFormData(prev => ({ ...prev, doctorId: value }))}>
-              <SelectTrigger>
-                <SelectValue placeholder="Choose a doctor" />
-              </SelectTrigger>
-              <SelectContent>
-                {mockDoctors.map((doctor) => (
-                  <SelectItem key={doctor.id} value={doctor.id}>
-                    <div className="flex flex-col">
-                      <span>{doctor.name}</span>
-                      <span className="text-xs text-muted-foreground">
-                        {doctor.specialization} • {doctor.hospital}
-                      </span>
-                    </div>
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="doctor">Select Doctor *</Label>
+              <Select value={formData.doctorId} onValueChange={(value) => setFormData(prev => ({ ...prev, doctorId: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Choose a doctor" />
+                </SelectTrigger>
+                <SelectContent>
+                  {mockDoctors.map((doctor) => (
+                    <SelectItem key={doctor.id} value={doctor.id}>
+                      <div className="flex flex-col">
+                        <span>{doctor.name}</span>
+                        <span className="text-xs text-muted-foreground">
+                          {doctor.specialization} • {doctor.hospital}
+                        </span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="urgency">Priority Level</Label>
+              <Select value={formData.urgency} onValueChange={(value) => setFormData(prev => ({ ...prev, urgency: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select priority" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="routine">Routine</SelectItem>
+                  <SelectItem value="urgent">Urgent (within 24hrs)</SelectItem>
+                  <SelectItem value="emergency">Emergency</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="date">Preferred Date *</Label>
+              <Input
+                id="date"
+                type="date"
+                value={formData.date}
+                onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
+                min={new Date().toISOString().split('T')[0]}
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="time">Preferred Time *</Label>
+              <Select value={formData.time} onValueChange={(value) => setFormData(prev => ({ ...prev, time: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select time slot" />
+                </SelectTrigger>
+                <SelectContent>
+                  {timeSlots.map((time) => (
+                    <SelectItem key={time} value={time}>
+                      {time}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="type">Appointment Type *</Label>
+              <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select appointment type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="consultation">General Consultation</SelectItem>
+                  <SelectItem value="checkup">Health Checkup</SelectItem>
+                  <SelectItem value="followup">Follow-up Visit</SelectItem>
+                  <SelectItem value="vaccination">Vaccination</SelectItem>
+                  <SelectItem value="emergency">Emergency Consultation</SelectItem>
+                  <SelectItem value="specialist">Specialist Referral</SelectItem>
+                  <SelectItem value="therapy">Physical Therapy</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="location">Preferred Location</Label>
+              <Select value={formData.location} onValueChange={(value) => setFormData(prev => ({ ...prev, location: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select location" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="main-clinic">Main Clinic</SelectItem>
+                  <SelectItem value="community-center">Community Health Center</SelectItem>
+                  <SelectItem value="mobile-unit">Mobile Health Unit</SelectItem>
+                  <SelectItem value="workplace">Workplace Visit</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="date">Preferred Date</Label>
+            <Label htmlFor="reason">Reason for Visit *</Label>
             <Input
-              id="date"
-              type="date"
-              value={formData.date}
-              onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
-              min={new Date().toISOString().split('T')[0]}
+              id="reason"
+              value={formData.reason}
+              onChange={(e) => setFormData(prev => ({ ...prev, reason: e.target.value }))}
+              placeholder="e.g., Annual checkup, Follow-up, Vaccination"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="time">Preferred Time</Label>
-            <Select value={formData.time} onValueChange={(value) => setFormData(prev => ({ ...prev, time: value }))}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select time slot" />
-              </SelectTrigger>
-              <SelectContent>
-                {timeSlots.map((time) => (
-                  <SelectItem key={time} value={time}>
-                    {time}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <Label htmlFor="symptoms">Current Symptoms</Label>
+            <Textarea
+              id="symptoms"
+              value={formData.symptoms}
+              onChange={(e) => setFormData(prev => ({ ...prev, symptoms: e.target.value }))}
+              placeholder="Describe any symptoms you're experiencing"
+              rows={2}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="insurance">Insurance Provider</Label>
+              <Input
+                id="insurance"
+                value={formData.insurance}
+                onChange={(e) => setFormData(prev => ({ ...prev, insurance: e.target.value }))}
+                placeholder="Insurance company name"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="emergencyContact">Emergency Contact</Label>
+              <Input
+                id="emergencyContact"
+                value={formData.emergencyContact}
+                onChange={(e) => setFormData(prev => ({ ...prev, emergencyContact: e.target.value }))}
+                placeholder="Emergency contact number"
+              />
+            </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="type">Appointment Type</Label>
-            <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select appointment type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="consultation">General Consultation</SelectItem>
-                <SelectItem value="checkup">Health Checkup</SelectItem>
-                <SelectItem value="followup">Follow-up Visit</SelectItem>
-                <SelectItem value="vaccination">Vaccination</SelectItem>
-                <SelectItem value="emergency">Emergency Consultation</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="notes">Additional Notes (Optional)</Label>
+            <Label htmlFor="notes">Additional Notes</Label>
             <Textarea
               id="notes"
               value={formData.notes}
               onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
-              placeholder="Any specific concerns or requirements"
+              placeholder="Any specific concerns, requirements, or additional information"
               rows={3}
             />
           </div>

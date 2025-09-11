@@ -23,7 +23,7 @@ import {
   FileCheck,
   ChevronRight
 } from 'lucide-react';
-import { mockHealthRecords } from '@/data/mockData';
+import { mockHealthRecords, mockDoctors } from '@/data/mockData';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { useToast } from '@/hooks/use-toast';
 import { HealthRecord } from '@/types';
@@ -202,8 +202,14 @@ function UploadRecordDialog({ open, onOpenChange }: { open: boolean; onOpenChang
     type: '',
     title: '',
     description: '',
-    category: ''
+    doctorId: '',
+    recordDate: '',
+    expiryDate: '',
+    privacy: 'private',
+    tags: '',
+    notes: ''
   });
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -215,7 +221,11 @@ function UploadRecordDialog({ open, onOpenChange }: { open: boolean; onOpenChang
     });
     
     onOpenChange(false);
-    setFormData({ type: '', title: '', description: '', category: '' });
+    setFormData({ 
+      type: '', title: '', description: '', doctorId: '', recordDate: '', 
+      expiryDate: '', privacy: 'private', tags: '', notes: '' 
+    });
+    setSelectedFiles([]);
   };
 
   return (
@@ -226,7 +236,7 @@ function UploadRecordDialog({ open, onOpenChange }: { open: boolean; onOpenChang
           {t('records.upload')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Upload Health Record</DialogTitle>
           <DialogDescription>
@@ -234,30 +244,90 @@ function UploadRecordDialog({ open, onOpenChange }: { open: boolean; onOpenChang
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="type">Record Type</Label>
-            <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select record type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="vaccination">{t('records.type.vaccination')}</SelectItem>
-                <SelectItem value="prescription">{t('records.type.prescription')}</SelectItem>
-                <SelectItem value="checkup">{t('records.type.checkup')}</SelectItem>
-                <SelectItem value="report">{t('records.type.report')}</SelectItem>
-                <SelectItem value="certificate">{t('records.type.certificate')}</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="type">Record Type *</Label>
+              <Select value={formData.type} onValueChange={(value) => setFormData(prev => ({ ...prev, type: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select record type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="vaccination">{t('records.type.vaccination')}</SelectItem>
+                  <SelectItem value="prescription">{t('records.type.prescription')}</SelectItem>
+                  <SelectItem value="checkup">{t('records.type.checkup')}</SelectItem>
+                  <SelectItem value="report">{t('records.type.report')}</SelectItem>
+                  <SelectItem value="certificate">{t('records.type.certificate')}</SelectItem>
+                  <SelectItem value="lab-results">Lab Results</SelectItem>
+                  <SelectItem value="imaging">Medical Imaging</SelectItem>
+                  <SelectItem value="allergy">Allergy Information</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="privacy">Privacy Level</Label>
+              <Select value={formData.privacy} onValueChange={(value) => setFormData(prev => ({ ...prev, privacy: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select privacy level" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="private">Private (Only me)</SelectItem>
+                  <SelectItem value="healthcare">Healthcare Providers</SelectItem>
+                  <SelectItem value="emergency">Emergency Access</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
+            <Label htmlFor="title">Record Title *</Label>
             <Input
               id="title"
               value={formData.title}
               onChange={(e) => setFormData(prev => ({ ...prev, title: e.target.value }))}
-              placeholder="e.g., COVID-19 Vaccination"
+              placeholder="e.g., COVID-19 Vaccination Certificate"
               required
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="doctorId">Healthcare Provider</Label>
+              <Select value={formData.doctorId} onValueChange={(value) => setFormData(prev => ({ ...prev, doctorId: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select provider (optional)" />
+                </SelectTrigger>
+                <SelectContent>
+                  {mockDoctors.map((doctor) => (
+                    <SelectItem key={doctor.id} value={doctor.id}>
+                      {doctor.name} - {doctor.specialization}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="recordDate">Record Date *</Label>
+              <Input
+                id="recordDate"
+                type="date"
+                value={formData.recordDate}
+                onChange={(e) => setFormData(prev => ({ ...prev, recordDate: e.target.value }))}
+                max={new Date().toISOString().split('T')[0]}
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="expiryDate">Expiry Date (if applicable)</Label>
+            <Input
+              id="expiryDate"
+              type="date"
+              value={formData.expiryDate}
+              onChange={(e) => setFormData(prev => ({ ...prev, expiryDate: e.target.value }))}
+              min={new Date().toISOString().split('T')[0]}
             />
           </div>
 
@@ -273,16 +343,72 @@ function UploadRecordDialog({ open, onOpenChange }: { open: boolean; onOpenChang
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="file">Upload Document (Optional)</Label>
+            <Label htmlFor="tags">Tags (comma-separated)</Label>
+            <Input
+              id="tags"
+              value={formData.tags}
+              onChange={(e) => setFormData(prev => ({ ...prev, tags: e.target.value }))}
+              placeholder="e.g., annual, routine, follow-up"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="file">Upload Documents</Label>
             <div className="border-2 border-dashed border-muted rounded-lg p-6 text-center">
+              <input
+                type="file"
+                id="fileInput"
+                multiple
+                accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                className="hidden"
+                onChange={(e) => {
+                  if (e.target.files) {
+                    setSelectedFiles(Array.from(e.target.files));
+                  }
+                }}
+              />
               <Upload className="w-8 h-8 mx-auto mb-2 text-muted-foreground" />
               <p className="text-sm text-muted-foreground mb-2">
                 Drag and drop files here, or click to browse
               </p>
-              <Button type="button" variant="outline" size="sm">
+              <p className="text-xs text-muted-foreground mb-3">
+                Supports PDF, JPG, PNG, DOC files (Max 10MB each)
+              </p>
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="sm"
+                onClick={() => document.getElementById('fileInput')?.click()}
+              >
                 Choose Files
               </Button>
             </div>
+            {selectedFiles.length > 0 && (
+              <div className="mt-3 space-y-2">
+                <p className="text-sm font-medium">{selectedFiles.length} file(s) selected:</p>
+                <div className="space-y-1">
+                  {selectedFiles.map((file, index) => (
+                    <div key={index} className="flex items-center justify-between text-sm p-2 bg-muted rounded">
+                      <span className="truncate">{file.name}</span>
+                      <span className="text-muted-foreground ml-2">
+                        {(file.size / 1024 / 1024).toFixed(2)} MB
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="notes">Additional Notes</Label>
+            <Textarea
+              id="notes"
+              value={formData.notes}
+              onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
+              placeholder="Any additional information or notes about this record"
+              rows={2}
+            />
           </div>
 
           <div className="flex gap-3">

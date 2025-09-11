@@ -1,8 +1,7 @@
 import { SidebarProvider, SidebarTrigger } from '@/components/ui/sidebar';
 import { AppSidebar } from './AppSidebar';
-import { Bell, Menu } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import { Menu } from 'lucide-react';
+import { NotificationDropdown } from '@/components/notifications/NotificationDropdown';
 
 interface MainLayoutProps {
   children: React.ReactNode;
@@ -29,15 +28,7 @@ export function MainLayout({ children }: MainLayoutProps) {
             
             <div className="flex items-center gap-4">
               {/* Notifications */}
-              <Button variant="ghost" size="sm" className="relative">
-                <Bell className="w-5 h-5" />
-                <Badge 
-                  variant="destructive" 
-                  className="absolute -top-1 -right-1 w-5 h-5 p-0 flex items-center justify-center text-xs"
-                >
-                  3
-                </Badge>
-              </Button>
+              <NotificationDropdown />
             </div>
           </header>
           
